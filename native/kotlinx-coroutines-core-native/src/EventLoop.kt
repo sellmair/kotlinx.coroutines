@@ -12,25 +12,6 @@ import kotlin.coroutines.*
 import kotlin.system.*
 
 /**
- * Implemented by [CoroutineDispatcher] implementations that have event loop inside and can
- * be asked to process next event from their event queue.
- *
- * It may optionally implement [Delay] interface and support time-scheduled tasks. It is used by [runBlocking] to
- * continue processing events when invoked from the event dispatch thread.
- */
-internal interface EventLoop {
-    /**
-     * Processes next event in this event loop.
-     *
-     * The result of this function is to be interpreted like this:
-     * * `<= 0` -- there are potentially more events for immediate processing;
-     * * `> 0` -- a number of nanoseconds to wait for next scheduled event;
-     * * [Long.MAX_VALUE] -- no more events, or was invoked from the wrong thread.
-     */
-    public fun processNextEvent(): Long
-}
-
-/**
  * Creates a new event loop.
  */
 @Suppress("FunctionName")

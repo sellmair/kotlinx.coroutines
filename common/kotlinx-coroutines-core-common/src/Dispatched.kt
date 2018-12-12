@@ -20,7 +20,12 @@ internal object UndispatchedEventLoop {
     )
 
     @JvmField
-    internal val threadLocalEventLoop = CommonThreadLocal { EventLoop() }
+    internal val threadLocalEventLoop = CommonThreadLocal<EventLoop?>()
+
+    private val eventLoop: EventLoop
+        get() = threadLocalEventLoop.get() ?: EventLoop().also {
+            threadLocalEventLoop.set(it)
+        }
 
     /**
      * Executes given [block] as part of current event loop, updating related to block [continuation]
@@ -30,7 +35,7 @@ internal object UndispatchedEventLoop {
      */
     inline fun execute(continuation: DispatchedContinuation<*>, contState: Any?, mode: Int,
                        doYield: Boolean = false, block: () -> Unit) : Boolean {
-        val eventLoop = threadLocalEventLoop.get()
+        val eventLoop = eventLoop
         if (eventLoop.isActive) {
             // If we are yielding and queue is empty, we can bail out as part of fast path
             if (doYield && eventLoop.queue.isEmpty) {
@@ -48,13 +53,12 @@ internal object UndispatchedEventLoop {
     }
 
     fun resumeUndispatched(task: DispatchedTask<*>): Boolean {
-        val eventLoop = threadLocalEventLoop.get()
+        val eventLoop = eventLoop
         if (eventLoop.isActive) {
             eventLoop.queue.addLast(task)
             return true
         }
-
-        runEventLoop(eventLoop, { task.resume(task.delegate, MODE_UNDISPATCHED) })
+        runEventLoop(eventLoop) { task.resume(task.delegate, MODE_UNDISPATCHED) }
         return false
     }
 

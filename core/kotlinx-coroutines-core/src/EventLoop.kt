@@ -8,27 +8,6 @@ import kotlinx.atomicfu.*
 import kotlinx.coroutines.internal.*
 import kotlin.coroutines.*
 
-/**
- * Implemented by [CoroutineDispatcher] implementations that have event loop inside and can
- * be asked to process next event from their event queue.
- *
- * It may optionally implement [Delay] interface and support time-scheduled tasks. It is used by [runBlocking] to
- * continue processing events when invoked from the event dispatch thread.
- *
- * @suppress **This an internal API and should not be used from general code.**
- */
-internal interface EventLoop: ContinuationInterceptor {
-    /**
-     * Processes next event in this event loop.
-     *
-     * The result of this function is to be interpreted like this:
-     * * `<= 0` -- there are potentially more events for immediate processing;
-     * * `> 0` -- a number of nanoseconds to wait for next scheduled event;
-     * * [Long.MAX_VALUE] -- no more events, or was invoked from the wrong thread.
-     */
-    public fun processNextEvent(): Long
-}
-
 private val DISPOSED_TASK = Symbol("REMOVED_TASK")
 
 // results for scheduleImpl
@@ -61,8 +40,8 @@ internal abstract class EventLoopBase: CoroutineDispatcher(), Delay, EventLoop {
     private val _delayed = atomic<ThreadSafeHeap<DelayedTask>?>(null)
 
     protected abstract val isCompleted: Boolean
-    protected abstract fun unpark()
-    protected abstract fun isCorrectThread(): Boolean
+
+    protected abstract val thread: Thread
 
     protected val isEmpty: Boolean
         get() = isQueueEmpty && isDelayedEmpty
@@ -95,6 +74,12 @@ internal abstract class EventLoopBase: CoroutineDispatcher(), Delay, EventLoop {
             return (nextDelayedTask.nanoTime - timeSource.nanoTime()).coerceAtLeast(0)
         }
 
+    private fun unpark() {
+        val thread = thread
+        if (Thread.currentThread() !== thread)
+            timeSource.unpark(thread)
+    }
+
     override fun dispatch(context: CoroutineContext, block: Runnable) =
         execute(block)
 
@@ -102,7 +87,7 @@ internal abstract class EventLoopBase: CoroutineDispatcher(), Delay, EventLoop {
         schedule(DelayedResumeTask(timeMillis, continuation))
 
     override fun processNextEvent(): Long {
-        if (!isCorrectThread()) return Long.MAX_VALUE
+        if (Thread.currentThread() !== thread) return Long.MAX_VALUE
         // queue all delayed tasks that are due to be executed
         val delayed = _delayed.value
         if (delayed != null && !delayed.isEmpty) {
@@ -318,27 +303,17 @@ internal abstract class EventLoopBase: CoroutineDispatcher(), Delay, EventLoop {
     }
 }
 
-internal abstract class ThreadEventLoop(
-    private val thread: Thread
+internal class BlockingEventLoop(
+    override val thread: Thread
 ) : EventLoopBase() {
-    override fun isCorrectThread(): Boolean = Thread.currentThread() === thread
-
-    override fun unpark() {
-        if (Thread.currentThread() !== thread)
-            timeSource.unpark(thread)
-    }
+    @Volatile
+    public override var isCompleted: Boolean = false
 
     fun shutdown() {
         closeQueue()
-        assert(isCorrectThread())
         // complete processing of all queued tasks
         while (processNextEvent() <= 0) { /* spin */ }
         // reschedule the rest of delayed tasks
         rescheduleAllDelayed()
     }
-}
-
-internal class BlockingEventLoop(thread: Thread) : ThreadEventLoop(thread) {
-    @Volatile
-    public override var isCompleted: Boolean = false
 }
