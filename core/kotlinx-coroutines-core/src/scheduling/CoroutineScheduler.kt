@@ -831,7 +831,10 @@ internal class CoroutineScheduler(
             // set termination deadline the first time we are here (it is reset in idleReset)
             if (terminationDeadline == 0L) terminationDeadline = System.nanoTime() + idleWorkerKeepAliveNs
             // actually park
-            doPark(idleWorkerKeepAliveNs)
+            if (!doPark(idleWorkerKeepAliveNs)) {
+                terminationDeadline = 0
+                return
+            }
             // try terminate when we are idle past termination deadline
             // note, that comparison is written like this to protect against potential nanoTime wraparound
             if (System.nanoTime() - terminationDeadline >= 0) {
@@ -840,9 +843,13 @@ internal class CoroutineScheduler(
             }
         }
 
-        private fun doPark(nanos: Long) {
+        private fun doPark(nanos: Long): Boolean {
             parkedWorkersStackPush(this)
+            if (!blockingQuiescence()) {
+                return false
+            }
             LockSupport.parkNanos(nanos)
+            return true
         }
 
         /**
