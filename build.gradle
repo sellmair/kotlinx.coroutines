@@ -12,6 +12,7 @@ buildscript {
     }
     repositories {
         jcenter()
+        mavenLocal()
         maven { url "https://kotlin.bintray.com/kotlinx" }
         maven { url "https://kotlin.bintray.com/kotlin-dev" }
         maven { url "https://kotlin.bintray.com/kotlin-eap" }
@@ -55,6 +56,7 @@ allprojects {
 
     def name = it.name
     repositories {
+        mavenLocal()
         /*
          * google should be first in the repository list because some of the play services
          * transitive dependencies was removed from jcenter, thus breaking gradle dependency resolution
