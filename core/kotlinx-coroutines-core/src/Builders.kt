@@ -70,7 +70,7 @@ private class BlockingCoroutine<T>(
 
     @Suppress("UNCHECKED_CAST")
     fun joinBlocking(topLevelEventLoop: Boolean): T {
-        if (topLevelEventLoop) timeSource.registerTimeLoopThread()
+        timeSource.registerTimeLoopThread()
         while (true) {
             @Suppress("DEPRECATION")
             if (Thread.interrupted()) throw InterruptedException().also { cancel(it) }
@@ -89,8 +89,8 @@ private class BlockingCoroutine<T>(
                 isCompleted = true
                 shutdown()
             }
-            timeSource.unregisterTimeLoopThread()
         }
+        timeSource.unregisterTimeLoopThread()
         // now return result
         val state = this.state.unboxState()
         (state as? CompletedExceptionally)?.let { throw it.cause }

@@ -6,7 +6,13 @@ package kotlinx.coroutines
 
 import kotlinx.coroutines.channels.*
 import org.junit.*
+import org.junit.Test
+import kotlin.test.*
 
+/**
+ * Tests event loops integration.
+ * See [https://github.com/Kotlin/kotlinx.coroutines/issues/860].
+ */
 class EventLoopsTest {
     @Test
     fun testNestedRunBlocking() {
@@ -14,7 +20,7 @@ class EventLoopsTest {
             // Produce string "OK"
             val ch = produce { send("OK") }
             // try receive this string in a blocking way:
-            println(runBlocking { ch.receive() }) // it hangs here !!!
+            assertEquals("OK", runBlocking { ch.receive() }) // it hangs here !!!
         }
     }
 }
