@@ -10,8 +10,10 @@ dependencies {
 }
 
 tasks.withType(dokka.getClass()) {
-    externalDocumentationLink {
-        packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
-        url = new URL("https://www.slf4j.org/apidocs/")
+    configuration {
+        externalDocumentationLink {
+            packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+            url = new URL("https://www.slf4j.org/apidocs/")
+        }
     }
 }

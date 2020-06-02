@@ -261,13 +261,19 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
         if (it.name != coreModule) {
             dokka.dependsOn project(":$coreModule").dokka
             tasks.withType(dokka.getClass()) {
-                externalDocumentationLink {
-                    url = new URL(core_docs_url)
-                    packageListUrl = new File(core_docs_file).toURI().toURL()
+                configuration {
+                    externalDocumentationLink {
+                        url = new URL(core_docs_url)
+                        packageListUrl = new File(core_docs_file).toURI().toURL()
+                    }
                 }
             }
         }
     }
+}
+
+dokkaMultimodule {
+    outputFormat = 'html'
 }
 
 // Report Kotlin compiler version when building project

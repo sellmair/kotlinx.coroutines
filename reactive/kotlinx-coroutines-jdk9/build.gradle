@@ -17,8 +17,10 @@ compileKotlin {
 }
 
 tasks.withType(dokka.getClass()) {
-    externalDocumentationLink {
-        url = new URL("https://docs.oracle.com/javase/9/docs/api/java/util/concurrent/Flow.html")
-        packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+    configuration {
+        externalDocumentationLink {
+            url = new URL("https://docs.oracle.com/javase/9/docs/api/")
+            packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+        }
     }
 }
