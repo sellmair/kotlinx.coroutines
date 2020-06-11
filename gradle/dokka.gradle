@@ -23,7 +23,7 @@ apply plugin: 'org.jetbrains.dokka'
 tasks.withType(dokka.getClass()) {
     configuration {
         jdkVersion = 8
-        includes = ['README.md']
+//        includes = ['README.md']
     }
 }
 
@@ -47,9 +47,15 @@ dokka {
             }
         } else {
             dokkaSourceSets {
-                commonMain
-                jvmMain
-                jsMain
+                commonMain {
+                    includes = ['README.md']
+                }
+                jvmMain {
+                    includes = ['README.md']
+                }
+                jsMain {
+                    includes = ['README.md']
+                }
             }
         }
     }

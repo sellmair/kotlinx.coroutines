@@ -6,6 +6,7 @@ import org.gradle.util.VersionNumber
 
 apply plugin: 'jdk-convention'
 apply from: rootProject.file("gradle/experimental.gradle")
+apply plugin: 'org.jetbrains.dokka'
 
 def rootModule = "kotlinx.coroutines"
 def coreModule = "kotlinx-coroutines-core"
@@ -272,8 +273,15 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     }
 }
 
-dokkaMultimodule {
-    outputFormat = 'html'
+//dokkaMultimodule {
+//    outputFormat = 'html'
+//}
+apply plugin: "org.jetbrains.kotlin.jvm"
+apply plugin: 'org.jetbrains.dokka'
+
+dokkaCollector {
+    outputDirectory = "$buildDir/dokkaCollector"
+    modules = ["kotlinx-coroutines-core", "kotlinx-coroutines-debug", "kotlinx-coroutines-test"]
 }
 
 // Report Kotlin compiler version when building project
