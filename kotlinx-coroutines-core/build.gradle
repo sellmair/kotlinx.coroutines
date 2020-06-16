@@ -85,11 +85,11 @@ task checkJdk16() {
     }
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    kotlinOptions.jdkHome = System.env.JDK_16
-    // only fail when actually trying to compile, not during project setup phase
-    dependsOn(checkJdk16)
-}
+//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+//    kotlinOptions.jdkHome = System.env.JDK_16
+//    // only fail when actually trying to compile, not during project setup phase
+//    dependsOn(checkJdk16)
+//}
 
 jvmTest {
     minHeapSize = '1g'

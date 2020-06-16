@@ -21,9 +21,11 @@ configurations {
 apply plugin: 'org.jetbrains.dokka'
 
 tasks.withType(dokka.getClass()) {
-    configuration {
-        jdkVersion = 8
-//        includes = ['README.md']
+    dokkaSourceSets {
+        configureEach {
+            jdkVersion = 8
+            includes = ['README.md']
+        }
     }
 }
 
@@ -35,37 +37,53 @@ dependencies {
 dokka {
     outputFormat = 'html'
     dependsOn(project.configurations.dokkaStubs)
-    configuration {
-        noStdlibLink = true
-        externalDocumentationLink {
-            packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
-            url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
-        }
+    dokkaSourceSets {
         if (project.name != "kotlinx-coroutines-core") {
-            dokkaSourceSets {
-                main
+            configureEach {
+                externalDocumentationLink {
+                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
+                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
+                }
+                noStdlibLink = true
             }
+
         } else {
-            dokkaSourceSets {
-                commonMain {
-                    includes = ['README.md']
+            commonMain {
+                includes = ['README.md']
+                externalDocumentationLink {
+                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
+                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
                 }
-                jvmMain {
-                    includes = ['README.md']
+                noStdlibLink = true
+            }
+            jvmMain {
+                includes = ['README.md']
+                externalDocumentationLink {
+                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
+                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
                 }
-                jsMain {
-                    includes = ['README.md']
+                noStdlibLink = true
+            }
+            jsMain {
+                includes = ['README.md']
+                externalDocumentationLink {
+                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
+                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
                 }
+                noStdlibLink = true
             }
         }
+
     }
     if (project.name != "kotlinx-coroutines-core") {
         dependsOn(project.configurations.compileClasspath)
         dependsOn(project.sourceSets.main.output)
         doFirst {
             // resolve classpath only during execution
-            configuration {
-                classpath = new ArrayList(project.configurations.dokkaStubs.files + project.configurations.compileClasspath.files + project.sourceSets.main.output.files)
+            dokkaSourceSets {
+                configureEach {
+                    classpath = new ArrayList(project.configurations.dokkaStubs.files + project.configurations.compileClasspath.files + project.sourceSets.main.output.files)
+                }
             }
         }
     }
@@ -78,37 +96,39 @@ if (project.name == "kotlinx-coroutines-core") {
         dokkaStubs project(":kotlinx-coroutines-core")
     }
 
-    dokka {
-        /*kotlinTasks { [] }
-        suppressedModifiers = ['actual']*/
-        makeLinkMapping(it, projectDir)
-        makeLinkMapping(it, project.file("js"))
-        makeLinkMapping(it, project.file("jvm"))
-        makeLinkMapping(it, project.file("native"))
-        makeLinkMapping(it, project.file("common"))
-        // source roots
-        impliedPlatforms = ['JVM', 'JS', 'Native']
-        configuration {
-            sourceRoot {
-                path = rootProject.file("$project.name/common/src")
-            }
-            sourceRoot {
-                path = rootProject.file("$project.name/jvm/src")
-                //platforms = ['JVM']
-            }
-            sourceRoot {
-                path = rootProject.file("$project.name/js/src")
-                //platforms = ['JS']
-            }
-            sourceRoot {
-                path = rootProject.file("$project.name/native/src")
-                //platforms = ['Native']
-            }
-            doFirst {
-                classpath = new ArrayList(project.configurations.dokkaStubs.files +
-                        project.configurations.jvmCompileClasspath.files +
-                        project.kotlin.targets.jvm.compilations.main.output.allOutputs)
-            }
-        }
-    }
+//    dokka {
+//        /*kotlinTasks { [] }
+//        suppressedModifiers = ['actual']*/
+//        makeLinkMapping(it, projectDir)
+//        makeLinkMapping(it, project.file("js"))
+//        makeLinkMapping(it, project.file("jvm"))
+//        makeLinkMapping(it, project.file("native"))
+//        makeLinkMapping(it, project.file("common"))
+//        // source roots
+//        impliedPlatforms = ['JVM', 'JS', 'Native']
+//        sourceSets {
+//            main {
+//                sourceRoot {
+//                    path = rootProject.file("$project.name/common/src")
+//                }
+//                sourceRoot {
+//                    path = rootProject.file("$project.name/jvm/src")
+//                    //platforms = ['JVM']
+//                }
+//                sourceRoot {
+//                    path = rootProject.file("$project.name/js/src")
+//                    //platforms = ['JS']
+//                }
+//                sourceRoot {
+//                    path = rootProject.file("$project.name/native/src")
+//                    //platforms = ['Native']
+//                }
+//                doFirst {
+//                    classpath = new ArrayList(project.configurations.dokkaStubs.files +
+//                            project.configurations.jvmCompileClasspath.files +
+//                            project.kotlin.targets.jvm.compilations.main.output.allOutputs)
+//                }
+//            }
+//        }
+//    }
 }

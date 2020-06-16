@@ -17,10 +17,12 @@ compileKotlin {
 }
 
 tasks.withType(dokka.getClass()) {
-    configuration {
-        externalDocumentationLink {
-            url = new URL("https://docs.oracle.com/javase/9/docs/api/")
-            packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+    dokkaSourceSets {
+        configureEach {
+            externalDocumentationLink {
+                url = new URL("https://docs.oracle.com/javase/9/docs/api/")
+                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+            }
         }
     }
 }

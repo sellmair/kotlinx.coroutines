@@ -10,10 +10,12 @@ dependencies {
 }
 
 tasks.withType(dokka.getClass()) {
-    configuration {
-        externalDocumentationLink {
-            packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
-            url = new URL("https://www.slf4j.org/apidocs/")
+    dokkaSourceSets {
+        configureEach {
+            externalDocumentationLink {
+                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url = new URL("https://www.slf4j.org/apidocs/")
+            }
         }
     }
 }

@@ -262,10 +262,12 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
         if (it.name != coreModule) {
             dokka.dependsOn project(":$coreModule").dokka
             tasks.withType(dokka.getClass()) {
-                configuration {
-                    externalDocumentationLink {
-                        url = new URL(core_docs_url)
-                        packageListUrl = new File(core_docs_file).toURI().toURL()
+                dokkaSourceSets {
+                    configureEach {
+                        externalDocumentationLink {
+                            url = new URL(core_docs_url)
+                            packageListUrl = new File(core_docs_file).toURI().toURL()
+                        }
                     }
                 }
             }

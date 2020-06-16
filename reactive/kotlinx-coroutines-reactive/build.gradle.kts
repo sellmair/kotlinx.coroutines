@@ -35,10 +35,12 @@ tasks {
     }
 
     withType<DokkaTask>().configureEach {
-        configuration {
-            externalDocumentationLink {
-                url = URL("https://www.reactive-streams.org/reactive-streams-$reactiveStreamsVersion-javadoc/")
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+        dokkaSourceSets {
+            configureEach {
+                externalDocumentationLink {
+                    url = URL("https://www.reactive-streams.org/reactive-streams-$reactiveStreamsVersion-javadoc/")
+                    packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                }
             }
         }
     }
