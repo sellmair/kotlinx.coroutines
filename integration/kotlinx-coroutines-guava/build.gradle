@@ -8,7 +8,7 @@ dependencies {
     compile "com.google.guava:guava:$guava_version"
 }
 
-tasks.withType(dokka.getClass()) {
+tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {

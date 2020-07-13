@@ -18,7 +18,7 @@ compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-tasks.withType(dokka.getClass()) {
+tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {

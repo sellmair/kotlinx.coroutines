@@ -16,7 +16,7 @@ compileKotlin {
     kotlinOptions.jvmTarget = "9"
 }
 
-tasks.withType(dokka.getClass()) {
+tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {

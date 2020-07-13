@@ -260,8 +260,8 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
 configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     if (it.name != "kotlinx-coroutines-bom") {
         if (it.name != coreModule) {
-            dokka.dependsOn project(":$coreModule").dokka
-            tasks.withType(dokka.getClass()) {
+            dokkaHtml.dependsOn project(":$coreModule").dokkaHtml
+            tasks.withType(dokkaHtml.getClass()) {
                 dokkaSourceSets {
                     configureEach {
                         externalDocumentationLink {
@@ -281,7 +281,7 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
 apply plugin: "org.jetbrains.kotlin.jvm"
 apply plugin: 'org.jetbrains.dokka'
 
-dokkaCollector {
+dokkaHtmlCollector {
     outputDirectory = "$buildDir/dokkaCollector"
     modules = ["kotlinx-coroutines-core", "kotlinx-coroutines-debug", "kotlinx-coroutines-test"]
 }

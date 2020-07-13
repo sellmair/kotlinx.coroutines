@@ -7,7 +7,7 @@ dependencies {
     compile project(':kotlinx-coroutines-reactive')
 }
 
-tasks.withType(dokka.getClass()) {
+tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {

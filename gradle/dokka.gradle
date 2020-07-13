@@ -20,7 +20,7 @@ configurations {
 
 apply plugin: 'org.jetbrains.dokka'
 
-tasks.withType(dokka.getClass()) {
+tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             jdkVersion = 8
@@ -34,8 +34,7 @@ dependencies {
 }
 
 
-dokka {
-    outputFormat = 'html'
+dokkaHtml {
     dependsOn(project.configurations.dokkaStubs)
     dokkaSourceSets {
         if (project.name != "kotlinx-coroutines-core") {
