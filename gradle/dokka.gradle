@@ -5,7 +5,7 @@
 // Configures generation of JavaDoc & Dokka artifacts
 
 def makeLinkMapping(dokka, projectDir) {
-    dokka.configuration.sourceLink {
+    dokka.sourceLink {
         def relPath = rootProject.projectDir.toPath().relativize(projectDir.toPath())
         path = "$projectDir/src"
         url = "https://github.com/kotlin/kotlinx.coroutines/tree/master/$relPath/src"
@@ -48,6 +48,8 @@ dokkaHtml {
 
         } else {
             commonMain {
+                makeLinkMapping(it, project.file("common"))
+
                 includes = ['README.md']
                 externalDocumentationLink {
                     packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
@@ -56,6 +58,8 @@ dokkaHtml {
                 noStdlibLink = true
             }
             jvmMain {
+                makeLinkMapping(it, project.file("jvm"))
+
                 includes = ['README.md']
                 externalDocumentationLink {
                     packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
@@ -64,6 +68,8 @@ dokkaHtml {
                 noStdlibLink = true
             }
             jsMain {
+                makeLinkMapping(it, project.file("js"))
+
                 includes = ['README.md']
                 externalDocumentationLink {
                     packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()

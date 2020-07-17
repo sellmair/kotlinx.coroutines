@@ -40,7 +40,7 @@ buildscript {
     rootProject.properties.each { key, value ->
         if (key.endsWith("_version") && value instanceof String && value.endsWith("-SNAPSHOT")) {
             println("NOTE: USING SNAPSHOT VERSION: $key=$value")
-            ext.using_snapshot_version=true
+            ext.using_snapshot_version = true
         }
     }
 
@@ -280,11 +280,6 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
 //}
 apply plugin: "org.jetbrains.kotlin.jvm"
 apply plugin: 'org.jetbrains.dokka'
-
-dokkaHtmlCollector {
-    outputDirectory = "$buildDir/dokkaCollector"
-    modules = ["kotlinx-coroutines-core", "kotlinx-coroutines-debug", "kotlinx-coroutines-test"]
-}
 
 // Report Kotlin compiler version when building project
 println("Using Kotlin compiler version: $org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION")
