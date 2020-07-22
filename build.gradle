@@ -275,9 +275,10 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     }
 }
 
-//dokkaMultimodule {
-//    outputFormat = 'html'
-//}
+dokkaHtmlMultimodule {
+    outputDirectory = "./htmlMultimodule"
+}
+
 apply plugin: "org.jetbrains.kotlin.jvm"
 apply plugin: 'org.jetbrains.dokka'
 
