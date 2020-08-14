@@ -7,9 +7,8 @@
 def makeLinkMapping(dokka, projectDir) {
     dokka.sourceLink {
         def relPath = rootProject.projectDir.toPath().relativize(projectDir.toPath())
-        path = "$projectDir/src"
-        url = "https://github.com/kotlin/kotlinx.coroutines/tree/master/$relPath/src"
-        lineSuffix = "#L"
+        localDirectory.set(project.file("src"))
+        remoteUrl.set(new URL("https://github.com/kotlin/kotlinx.coroutines/tree/master/$relPath/src"))
     }
 }
 
@@ -23,8 +22,8 @@ apply plugin: 'org.jetbrains.dokka'
 tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
-            jdkVersion = 8
-            includes = ['README.md']
+            jdkVersion.set(8)
+            includes.from('README.md')
         }
     }
 }
@@ -40,42 +39,42 @@ dokkaHtml {
         if (project.name != "kotlinx-coroutines-core") {
             configureEach {
                 externalDocumentationLink {
-                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
-                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
+                    packageListUrl.set(rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL())
+                    url.set(new URL("https://kotlinlang.org/api/latest/jvm/stdlib/"))
                 }
-                noStdlibLink = true
+                noStdlibLink.set(true)
             }
 
         } else {
             commonMain {
                 makeLinkMapping(it, project.file("common"))
 
-                includes = ['README.md']
+                includes.from('README.md')
                 externalDocumentationLink {
-                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
-                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
+                    packageListUrl.set(rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL())
+                    url.set(new URL("https://kotlinlang.org/api/latest/jvm/stdlib/"))
                 }
-                noStdlibLink = true
+                noStdlibLink.set(true)
             }
             jvmMain {
                 makeLinkMapping(it, project.file("jvm"))
 
-                includes = ['README.md']
+                includes.from('README.md')
                 externalDocumentationLink {
-                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
-                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
+                    packageListUrl.set(rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL())
+                    url.set(new URL("https://kotlinlang.org/api/latest/jvm/stdlib/"))
                 }
-                noStdlibLink = true
+                noStdlibLink.set(true)
             }
             jsMain {
                 makeLinkMapping(it, project.file("js"))
 
-                includes = ['README.md']
+                includes.from('README.md')
                 externalDocumentationLink {
-                    packageListUrl = rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL()
-                    url = new URL("https://kotlinlang.org/api/latest/jvm/stdlib/")
+                    packageListUrl.set(rootProject.projectDir.toPath().resolve("site/stdlib.package.list").toUri().toURL())
+                    url.set(new URL("https://kotlinlang.org/api/latest/jvm/stdlib/"))
                 }
-                noStdlibLink = true
+                noStdlibLink.set(true)
             }
         }
 
@@ -87,7 +86,10 @@ dokkaHtml {
             // resolve classpath only during execution
             dokkaSourceSets {
                 configureEach {
-                    classpath = new ArrayList(project.configurations.dokkaStubs.files + project.configurations.compileClasspath.files + project.sourceSets.main.output.files)
+//                    classpath.clear()
+                    classpath.setFrom(project.configurations.dokkaStubs.files)
+                    classpath.from(project.configurations.compileClasspath.files)
+                    classpath.from(project.sourceSets.main.output.files)
                 }
             }
         }

@@ -247,8 +247,8 @@ configure(subprojects.findAll { !sourceless.contains(it.name) && it.name != "ben
     }
 }
 
-def core_docs_url = "https://kotlin.github.io/kotlinx.coroutines/$coreModule/"
-def core_docs_file = "$projectDir/kotlinx-coroutines-core/build/dokka/html/kotlinx-coroutines-core/package-list"
+def core_docs_url = new URL("https://kotlin.github.io/kotlinx.coroutines/$coreModule/")
+def core_docs_file = new File("$projectDir/kotlinx-coroutines-core/build/dokka/html/kotlinx-coroutines-core/package-list")
 
 configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     if (it.name != 'kotlinx-coroutines-bom') {
@@ -265,8 +265,8 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
                 dokkaSourceSets {
                     configureEach {
                         externalDocumentationLink {
-                            url = new URL(core_docs_url)
-                            packageListUrl = new File(core_docs_file).toURI().toURL()
+                            url.set(core_docs_url)
+                            packageListUrl.set(core_docs_file.toURI().toURL())
                         }
                     }
                 }
@@ -275,8 +275,8 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     }
 }
 
-dokkaHtmlMultimodule {
-    outputDirectory = "./htmlMultimodule"
+dokkaHtmlMultiModule {
+    outputDirectory.set(project.file("htmlMultimodule"))
 }
 
 apply plugin: "org.jetbrains.kotlin.jvm"

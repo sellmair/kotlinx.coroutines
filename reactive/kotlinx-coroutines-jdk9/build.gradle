@@ -20,8 +20,8 @@ tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                url = new URL("https://docs.oracle.com/javase/9/docs/api/")
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url.set(new URL("https://docs.oracle.com/javase/9/docs/api/"))
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
             }
         }
     }

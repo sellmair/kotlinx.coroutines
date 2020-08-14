@@ -13,8 +13,8 @@ tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
-                url = new URL("https://www.slf4j.org/apidocs/")
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
+                url.set(new URL("https://www.slf4j.org/apidocs/"))
             }
         }
     }

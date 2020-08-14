@@ -22,8 +22,8 @@ tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                url = new URL('http://reactivex.io/RxJava/3.x/javadoc/')
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url.set(new URL('http://reactivex.io/RxJava/3.x/javadoc/'))
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
             }
         }
     }

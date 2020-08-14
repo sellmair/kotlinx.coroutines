@@ -12,8 +12,8 @@ tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                url = new URL("https://google.github.io/guava/releases/$guava_version/api/docs/")
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url.set(new URL("https://google.github.io/guava/releases/$guava_version/api/docs/"))
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
             }
         }
     }

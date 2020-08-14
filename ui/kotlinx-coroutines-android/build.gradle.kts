@@ -104,8 +104,8 @@ tasks.withType<DokkaTask>().configureEach {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                url = URL("https://developer.android.com/reference/")
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url.set(URL("https://developer.android.com/reference/"))
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
             }
         }
     }

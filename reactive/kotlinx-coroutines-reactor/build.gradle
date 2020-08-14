@@ -11,8 +11,8 @@ tasks.withType(dokkaHtml.getClass()) {
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
-                url = new URL("https://projectreactor.io/docs/core/$reactor_version/api/")
-                packageListUrl = projectDir.toPath().resolve("package.list").toUri().toURL()
+                url.set(new URL("https://projectreactor.io/docs/core/$reactor_version/api/"))
+                packageListUrl.set(projectDir.toPath().resolve("package.list").toUri().toURL())
             }
         }
     }
