@@ -260,7 +260,6 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
 configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     if (it.name != "kotlinx-coroutines-bom") {
         if (it.name != coreModule) {
-            dokkaHtml.dependsOn project(":$coreModule").dokkaHtml
             tasks.withType(dokkaHtml.getClass()) {
                 dokkaSourceSets {
                     configureEach {
@@ -275,9 +274,6 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     }
 }
 
-dokkaHtmlMultiModule {
-    outputDirectory.set(project.file("htmlMultimodule"))
-}
 
 apply plugin: "org.jetbrains.kotlin.jvm"
 apply plugin: 'org.jetbrains.dokka'
